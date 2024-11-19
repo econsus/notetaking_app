@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "547282832915",
+    "project_id": "notetakingapp-44bc4",
+    "storage_bucket": "notetakingapp-44bc4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547282832915:android:79487c01b5a9a00510f9e6",
+        "android_client_info": {
+          "package_name": "com.example.login_using_firebase"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtGyjUkr5nw8ms3cjpOQRu1zY4oWCV8K8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547282832915:android:3bf7ba8ee1f3411d10f9e6",
+        "android_client_info": {
+          "package_name": "com.example.note_taking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtGyjUkr5nw8ms3cjpOQRu1zY4oWCV8K8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:547282832915:android:f66b36913f625cdd10f9e6",
+        "android_client_info": {
+          "package_name": "com.example.notetaking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAtGyjUkr5nw8ms3cjpOQRu1zY4oWCV8K8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
