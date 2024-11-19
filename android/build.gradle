@@ -12,7 +12,9 @@ buildscript {
 allprojects {
     repositories {
         google()
-        mavenCentral()
+        mavenCentral()  // Make sure this is included
+        maven { url 'https://jitpack.io' } // This is required for some third-party dependencies
+        jcenter() // Sometimes required as well for older packages
     }
 }
 

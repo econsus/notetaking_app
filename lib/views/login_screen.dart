@@ -30,7 +30,7 @@ class LoginScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 try {
-                  UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+                  await _auth.signInWithEmailAndPassword(
                     email: emailController.text,
                     password: passwordController.text,
                   );
