@@ -1,4 +1,3 @@
-// controllers/note_controller.dart
 import 'package:flutter/material.dart';
 import '../models/note.dart';
 
@@ -7,49 +6,65 @@ class NoteController extends ChangeNotifier {
 
   List<Note> get notes => _notes;
 
-  void addTextNote(String title, String content) {
-  _notes.add(
-    Note(
-      id: DateTime.now().toString(),
-      title: title,
-      content: content,
-      type: 'text',
-    ),
-  );
-  notifyListeners();
-}
+  // Add a text note with optional location
+  void addTextNote(String title, String content, {double? latitude, double? longitude}) {
+  // Debugging output
+  print('Adding Text Note');
+  print('Title: $title');
+  print('Latitude: $latitude, Longitude: $longitude');  // Log coordinates
 
-  void addAudioNote(String title, String filePath) {
-  final newNote = Note(
+  _notes.add(Note(
     id: DateTime.now().toString(),
     title: title,
-    type: 'audio',
-    filePath: filePath,
-  );
-  notes.add(newNote);
+    content: content,
+    type: 'text',
+    latitude: latitude,
+    longitude: longitude,
+  ));
   notifyListeners();
 }
 
 
-void addPictureNote(String title, String filePath) {
-  _notes.add(
-    Note(
+  // Add an audio note with optional location
+  void addAudioNote(String title, String filePath, {double? latitude, double? longitude}) {
+  print('Adding Audio Note');
+  print('Title: $title');
+  print('Latitude: $latitude, Longitude: $longitude');  // Log coordinates
+    _notes.add(Note(
       id: DateTime.now().toString(),
       title: title,
+      type: 'audio',
       filePath: filePath,
+      latitude: latitude,
+      longitude: longitude,
+    ));
+    notifyListeners();
+  }
+
+  // Add a picture note with optional location
+  void addPictureNote(String title, String filePath, {double? latitude, double? longitude}) {
+  print('Adding Picture Note');
+  print('Title: $title');
+  print('Latitude: $latitude, Longitude: $longitude');  // Log coordinates
+    _notes.add(Note(
+      id: DateTime.now().toString(),
+      title: title,
       type: 'image',
-    ),
-  );
-  notifyListeners();
-}
+      filePath: filePath,
+      latitude: latitude,
+      longitude: longitude,
+    ));
+    notifyListeners();
+  }
 
-
+  // Delete a note by ID
   void deleteNote(String id) {
     _notes.removeWhere((note) => note.id == id);
     notifyListeners();
   }
 
-  void updateNote(String id, String title, {String? content, String? filePath}) {
+  // Update an existing note (generic fields)
+  void updateNote(String id, String title, {String? content, String? filePath, double? latitude, double? longitude}) {
     final noteIndex = _notes.indexWhere((note) => note.id == id);
     if (noteIndex != -1) {
       final note = _notes[noteIndex];
@@ -59,21 +74,27 @@ void addPictureNote(String title, String filePath) {
         content: content ?? note.content,
         filePath: filePath ?? note.filePath,
         type: note.type,
+        latitude: latitude ?? note.latitude,
+        longitude: longitude ?? note.longitude,
       );
       notifyListeners();
     }
   }
 
-  void updateTextNote(String id, String updatedTitle, String updatedContent) {
-  final noteIndex = notes.indexWhere((note) => note.id == id);
-  if (noteIndex != -1) {
-    notes[noteIndex] = Note(
-      id: id,
-      title: updatedTitle,
-      content: updatedContent,
-      type: 'text',
-    );
-    notifyListeners();
+  // Specific method for updating text notes
+  void updateTextNote(String id, String updatedTitle, String updatedContent, {double? latitude, double? longitude}) {
+    final noteIndex = _notes.indexWhere((note) => note.id == id);
+    if (noteIndex != -1) {
+      final note = _notes[noteIndex];
+      _notes[noteIndex] = Note(
+        id: note.id,
+        title: updatedTitle,
+        content: updatedContent,
+        type: 'text',
+        latitude: latitude ?? note.latitude,
+        longitude: longitude ?? note.longitude,
+      );
+      notifyListeners();
+    }
   }
-}
 }

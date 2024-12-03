@@ -35,12 +35,11 @@ dependencies:
   firebase_auth_web: ^5.8.0
   firebase_messaging: ^14.9.4
   provider: ^6.0.6
-  flutter_speed_dial: ^6.0.0
   image_picker: ^0.8.7
   flutter_sound: ^9.2.13
-  record: ^5.0.0
   audioplayers: ^6.1.0
   path_provider: ^2.0.12
+  geolocator: ^11.1.0
 
 
   # The following adds the Cupertino Icons font to your application.
