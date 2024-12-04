@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '/controllers/location_controller.dart';
 import '/controllers/note_controller.dart';
 import '/views/edit_text_note_view.dart';
@@ -33,6 +34,16 @@ class _HomeScreenState extends State<HomeScreen> {
     _disposeRecorder();
     _disposePlayer();
   }
+
+  Future<void> _openGoogleMaps(double latitude, double longitude) async {
+  final googleMapsUrl = Uri.parse('https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
+  
+  if (await canLaunchUrl(googleMapsUrl)) {
+    await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
+  } else {
+    throw 'Could not open Google Maps.';
+  }
+}
 
   Future<void> _fetchLocation() async {
     final locationController = Provider.of<LocationController>(context, listen: false);
@@ -211,13 +222,32 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
   },
-  trailing: IconButton(
-    icon: Icon(Icons.delete),
-    onPressed: () {
-      noteController.deleteNote(note.id);
-    },
+  trailing: Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      if (note.latitude != null && note.longitude != null)
+        IconButton(
+          icon: Icon(Icons.map),
+          onPressed: () {
+            if (note.latitude != null && note.longitude != null) {
+              _openGoogleMaps(note.latitude!, note.longitude!);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Location not available for this note.')),
+      );
+    }
+  },
+),
+      IconButton(
+        icon: Icon(Icons.delete),
+        onPressed: () {
+          noteController.deleteNote(note.id);
+        },
+      ),
+    ],
   ),
 );
+
         },
       ),
       floatingActionButton: Column(
