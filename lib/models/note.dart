@@ -1,4 +1,3 @@
-// models/note.dart
 class Note {
   final String id;
   final String title;
@@ -17,4 +16,30 @@ class Note {
     this.latitude,
     this.longitude,
   });
+
+  // Convert a Note instance to a Map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'content': content,
+      'type': type,
+      'filePath': filePath,
+      'latitude': latitude,
+      'longitude': longitude,
+    };
+  }
+
+  // Create a Note instance from a Map
+  factory Note.fromMap(Map<String, dynamic> map) {
+    return Note(
+      id: map['id'],
+      title: map['title'],
+      content: map['content'],
+      type: map['type'],
+      filePath: map['filePath'],
+      latitude: map['latitude'] != null ? map['latitude'] as double : null,
+      longitude: map['longitude'] != null ? map['longitude'] as double : null,
+    );
+  }
 }

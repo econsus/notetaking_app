@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _initializeRecorder();
     _initializePlayer();
     _fetchLocation();
+    _loadNotes();
   }
 
   @override
@@ -35,20 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
     _disposePlayer();
   }
 
-  Future<void> _openGoogleMaps(double latitude, double longitude) async {
-  final googleMapsUrl = Uri.parse('https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
-  
-  if (await canLaunchUrl(googleMapsUrl)) {
-    await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
-  } else {
-    throw 'Could not open Google Maps.';
-  }
-}
-
   Future<void> _fetchLocation() async {
     final locationController = Provider.of<LocationController>(context, listen: false);
     await locationController.fetchLocation();
-    print("Fetched");
   }
 
   Future<void> _initializeRecorder() async {
@@ -67,6 +57,22 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _loadNotes() async {
+    final noteController = Provider.of<NoteController>(context, listen: false);
+    await noteController.fetchNotes(); // Fetch the notes, online or offline
+  }
+
+  // Method for opening Google Maps with coordinates
+  Future<void> _openGoogleMaps(double latitude, double longitude) async {
+    final googleMapsUrl = Uri.parse('https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
+    if (await canLaunchUrl(googleMapsUrl)) {
+      await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not open Google Maps.';
+    }
+  }
+
+  // Record audio, stop recording, and save
   Future<void> _startRecording() async {
     try {
       if (!_isRecording) {
@@ -155,6 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  // Play the audio file
   Future<void> _playAudio(String filePath) async {
     try {
       await _player.startPlayer(fromURI: filePath, codec: Codec.aacADTS);
@@ -184,70 +191,65 @@ class _HomeScreenState extends State<HomeScreen> {
         itemBuilder: (context, index) {
           final note = noteController.notes[index];
           return ListTile(
-  title: Text(note.title),
-  subtitle: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      if (note.type == 'text')
-        Text(note.content ?? 'No content')
-      else if (note.type == 'audio')
-        Text('Audio Note')
-      else if (note.type == 'image')
-        Text('Image Note'),
-      if (note.latitude != null && note.longitude != null)
-        Text('Lat: ${note.latitude}, Long: ${note.longitude}')
-      else
-        Text('Lat: null, Long: null'),
-    ],
-  ),
-  onTap: () {
-    if (note.type == 'text') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => EditTextNoteView(note: note),
-        ),
-      );
-    } else if (note.type == 'audio') {
-      _playAudio(note.filePath!);
-    } else if (note.type == 'image') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => PictureNoteView(
-            imagePath: note.filePath!,
-            title: note.title,
-          ),
-        ),
-      );
-    }
-  },
-  trailing: Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      if (note.latitude != null && note.longitude != null)
-        IconButton(
-          icon: Icon(Icons.map),
-          onPressed: () {
-            if (note.latitude != null && note.longitude != null) {
-              _openGoogleMaps(note.latitude!, note.longitude!);
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Location not available for this note.')),
-      );
-    }
-  },
-),
-      IconButton(
-        icon: Icon(Icons.delete),
-        onPressed: () {
-          noteController.deleteNote(note.id);
-        },
-      ),
-    ],
-  ),
-);
-
+            title: Text(note.title),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (note.type == 'text')
+                  Text(note.content ?? 'No content')
+                else if (note.type == 'audio')
+                  Text('Audio Note')
+                else if (note.type == 'image')
+                  Text('Image Note'),
+                if (note.latitude != null && note.longitude != null)
+                  Text('Lat: ${note.latitude}, Long: ${note.longitude}')
+                else
+                  Text('Lat: null, Long: null'),
+              ],
+            ),
+            onTap: () {
+              if (note.type == 'text') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditTextNoteView(note: note),
+                  ),
+                );
+              } else if (note.type == 'audio') {
+                _playAudio(note.filePath!);
+              } else if (note.type == 'image') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PictureNoteView(
+                      imagePath: note.filePath!,
+                      title: note.title,
+                    ),
+                  ),
+                );
+              }
+            },
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (note.latitude != null && note.longitude != null)
+                  IconButton(
+                    icon: Icon(Icons.map),
+                    onPressed: () {
+                      if (note.latitude != null && note.longitude != null) {
+                        _openGoogleMaps(note.latitude!, note.longitude!);
+                      }
+                    },
+                  ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    noteController.deleteNote(note.id);
+                  },
+                ),
+              ],
+            ),
+          );
         },
       ),
       floatingActionButton: Column(
